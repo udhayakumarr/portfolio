@@ -1,0 +1,54 @@
+[
+  {
+    "id": 1,
+    "title": "Micro-Frontend Shell Architecture",
+    "description": "A host shell built with Webpack Module Federation that composes independently deployed React micro-apps into a single seamless experience, with shared auth, routing, and design tokens.",
+    "tags": ["React", "Module Federation", "TypeScript", "Turborepo"],
+    "highlights": [
+      "Cut cross-team deploy conflicts by isolating release pipelines",
+      "Shared design-token runtime across 5+ micro-apps",
+      "Sub-200ms shell-to-remote hydration"
+    ],
+    "image": "/images/projects/project-1.png",
+    "year": "2025"
+  },
+  {
+    "id": 2,
+    "title": "Real-Time Collaboration Suite",
+    "description": "A multiplayer document editor with live cursors, presence indicators, and conflict-free replicated data types for offline-first collaborative editing.",
+    "tags": ["Next.js", "Node.js", "Socket.IO", "Redis"],
+    "highlights": [
+      "CRDT-based sync with zero merge conflicts offline",
+      "Live cursors and presence for 50+ concurrent editors",
+      "Reconnect-and-replay under flaky network conditions"
+    ],
+    "image": "/images/projects/project-2.png",
+    "year": "2024"
+  },
+  {
+    "id": 3,
+    "title": "Headless E-Commerce Storefront",
+    "description": "A GraphQL-driven storefront with incremental static regeneration, edge caching, and a fully composable checkout flow decoupled from the commerce backend.",
+    "tags": ["Next.js", "GraphQL", "Apollo", "Tailwind CSS"],
+    "highlights": [
+      "ISR + edge caching dropped TTFB below 200ms",
+      "Composable checkout reused across 3 storefront brands",
+      "Backend-agnostic data layer via GraphQL federation"
+    ],
+    "image": "/images/projects/project-3.png",
+    "year": "2024"
+  },
+  {
+    "id": 4,
+    "title": "Design System & Component Library",
+    "description": "A themeable, accessibility-first component library with an AST-based theme compiler, Storybook documentation, and automated visual regression testing.",
+    "tags": ["React", "Storybook", "Styled Components", "Rollup"],
+    "highlights": [
+      "AST theme compiler generated tokens for 12 brands",
+      "WCAG 2.1 AA compliant across all primitives",
+      "Visual regression suite caught 40+ pre-release bugs"
+    ],
+    "image": "/images/projects/project-4.png",
+    "year": "2023"
+  }
+]

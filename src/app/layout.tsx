@@ -55,8 +55,16 @@ export default function RootLayout({
     <html
       lang="en"
       className={`${outfit.variable} ${spaceGrotesk.variable} h-full scroll-smooth`}
+      suppressHydrationWarning
     >
-      <body className="min-h-full bg-gray-950 text-gray-100 flex flex-col font-sans radial-mesh">
+      <head>
+        <script
+          dangerouslySetInnerHTML={{
+            __html: `(function(){try{var t=localStorage.getItem('theme');if(t==='light'){document.documentElement.classList.add('light');}}catch(e){}})();`,
+          }}
+        />
+      </head>
+      <body className="min-h-full bg-gray-950 text-gray-100 light:bg-white light:text-gray-900 flex flex-col font-sans radial-mesh overflow-x-hidden">
         {children}
       </body>
     </html>

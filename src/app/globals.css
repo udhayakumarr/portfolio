@@ -1,5 +1,7 @@
 @import "tailwindcss";
 
+@custom-variant light (&:where(.light, .light *));
+
 @theme {
   --font-sans: var(--font-outfit), ui-sans-serif, system-ui, sans-serif;
   --font-display: var(--font-space-grotesk), ui-sans-serif, system-ui, sans-serif;
@@ -19,6 +21,12 @@ html {
   scroll-behavior: smooth;
   background-color: #030712; /* Deep void dark */
   color: #f9fafb;
+  transition: background-color 0.3s ease, color 0.3s ease;
+}
+
+html.light {
+  background-color: #f8fafc; /* Soft light surface */
+  color: #0f172a;
 }
 
 body {
@@ -46,10 +54,27 @@ body {
   background: #374151;
 }
 
+html.light ::-webkit-scrollbar-track {
+  background: #f1f5f9;
+}
+
+html.light ::-webkit-scrollbar-thumb {
+  background: #cbd5e1;
+}
+
+html.light ::-webkit-scrollbar-thumb:hover {
+  background: #94a3b8;
+}
+
 /* Custom selection highlight */
 ::selection {
   background-color: rgba(139, 92, 246, 0.3); /* Transparent cyber violet */
   color: #ffffff;
+}
+
+html.light ::selection {
+  background-color: rgba(139, 92, 246, 0.18);
+  color: #1e1b4b;
 }
 
 /* Glow Utilities */
@@ -67,8 +92,28 @@ body {
 
 /* Custom radial gradient mesh for background */
 .radial-mesh {
-  background-image: 
+  background-image:
+    radial-gradient(circle, rgba(255, 255, 255, 0.04) 1px, transparent 1px),
     radial-gradient(at 0% 0%, rgba(139, 92, 246, 0.1) 0px, transparent 50%),
     radial-gradient(at 100% 100%, rgba(59, 130, 246, 0.1) 0px, transparent 50%),
     radial-gradient(at 50% 50%, rgba(3, 7, 18, 1) 0px, rgba(3, 7, 18, 0.95) 100%);
+  background-size: 24px 24px, auto, auto, auto;
+}
+
+html.light .radial-mesh {
+  background-image:
+    radial-gradient(circle, rgba(15, 23, 42, 0.07) 1px, transparent 1px),
+    radial-gradient(at 0% 0%, rgba(139, 92, 246, 0.08) 0px, transparent 50%),
+    radial-gradient(at 100% 100%, rgba(59, 130, 246, 0.08) 0px, transparent 50%),
+    radial-gradient(at 50% 50%, rgba(248, 250, 252, 1) 0px, rgba(248, 250, 252, 0.95) 100%);
+  background-size: 24px 24px, auto, auto, auto;
+}
+
+/* Card hover lift */
+.card-lift {
+  transition: transform 0.35s ease, box-shadow 0.35s ease;
+}
+
+.card-lift:hover {
+  transform: translateY(-6px);
 }

@@ -1,16 +1,31 @@
 "use client";
 
-import { useState, useEffect } from "react";
+import { useEffect, useRef, useState } from "react";
+import ThemeToggle from "./ThemeToggle";
+import { CloseIcon, GitHubMarkIcon, MenuIcon } from "./icons";
 
 export default function Navbar() {
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
   const [isScrolled, setIsScrolled] = useState(false);
+  const [hidden, setHidden] = useState(false);
+  const lastY = useRef(0);
 
   useEffect(() => {
     const handleScroll = () => {
-      setIsScrolled(window.scrollY > 20);
+      const y = window.scrollY;
+      setIsScrolled(y > 20);
+
+      if (y < 80) {
+        setHidden(false);
+      } else if (y > lastY.current + 4) {
+        setHidden(true);
+        setIsMobileMenuOpen(false);
+      } else if (y < lastY.current - 4) {
+        setHidden(false);
+      }
+      lastY.current = y;
     };
-    window.addEventListener("scroll", handleScroll);
+    window.addEventListener("scroll", handleScroll, { passive: true });
     return () => window.removeEventListener("scroll", handleScroll);
   }, []);
 
@@ -23,17 +38,22 @@ export default function Navbar() {
 
   return (
     <header
-      className={`fixed top-0 left-0 right-0 z-50 transition-all duration-300 ${
-        isScrolled
-          ? "backdrop-blur-md bg-gray-950/80 border-b border-gray-800 py-4"
-          : "bg-transparent py-6"
-      }`}
+      className="fixed top-4 inset-x-0 z-50 w-11/12 max-w-4xl mx-auto transition-transform duration-500 ease-out"
+      style={{
+        transform: `translateY(${hidden ? "-150%" : "0"})`,
+      }}
     >
-      <div className="max-w-6xl mx-auto px-6 flex items-center justify-between">
+      <div
+        className={`flex items-center justify-between gap-4 rounded-full border backdrop-blur-xl px-4 py-2.5 sm:px-6 transition-all duration-300 ${
+          isScrolled
+            ? "border-gray-800 bg-gray-950/80 shadow-[0_8px_30px_-8px_rgba(0,0,0,0.6)] light:border-gray-200 light:bg-white/85 light:shadow-[0_8px_30px_-10px_rgba(15,23,42,0.18)]"
+            : "border-gray-800/60 bg-gray-950/50 shadow-[0_8px_24px_-12px_rgba(139,92,246,0.25)] light:border-gray-200/70 light:bg-white/60 light:shadow-[0_8px_24px_-12px_rgba(139,92,246,0.15)]"
+        }`}
+      >
         {/* Logo */}
         <a
           href="#about"
-          className="font-display text-xl font-bold tracking-tight text-white flex items-center gap-1.5 group"
+          className="font-display text-lg sm:text-xl font-bold tracking-tight text-white light:text-gray-900 flex items-center gap-1.5 group shrink-0"
         >
           <span className="text-violet-500 group-hover:text-blue-400 transition-colors duration-300">
             &lt;
@@ -44,84 +64,52 @@ export default function Navbar() {
           </span>
         </a>
 
-        {/* Desktop Navigation */}
-        <nav className="hidden md:flex items-center gap-8">
+        <nav className="hidden md:flex items-center gap-7">
           {navItems.map((item) => (
             <a
               key={item.name}
               href={item.href}
-              className="text-sm font-medium text-gray-400 hover:text-white transition-colors duration-200"
+              className="text-sm font-medium text-gray-400 hover:text-white light:text-gray-600 light:hover:text-gray-900 transition-colors duration-200"
             >
               {item.name}
             </a>
           ))}
         </nav>
 
-        {/* Action Button (GitHub) */}
-        <div className="hidden md:flex items-center">
+        <div className="hidden md:flex items-center gap-3">
+          <ThemeToggle />
           <a
             href="https://github.com/udhayakumarr"
             target="_blank"
             rel="noopener noreferrer"
-            className="flex items-center gap-2 px-4 py-2 rounded-full text-sm font-medium border border-gray-800 bg-gray-900/50 hover:bg-gray-800 hover:border-gray-700 text-gray-300 hover:text-white transition-all duration-300 backdrop-blur-sm"
+            className="flex items-center gap-2 px-4 py-2 rounded-full text-sm font-semibold bg-linear-to-r from-violet-600 to-blue-600 hover:from-violet-500 hover:to-blue-500 text-white shadow-md shadow-violet-500/25 hover:shadow-violet-500/40 hover:scale-[1.03] active:scale-[0.98] transition-all duration-300"
           >
-            <svg
-              className="w-4 h-4 fill-current"
-              viewBox="0 0 24 24"
-              aria-hidden="true"
-            >
-              <path
-                fillRule="evenodd"
-                clipRule="evenodd"
-                d="M12 2C6.477 2 2 6.484 2 12.017c0 4.425 2.865 8.18 6.839 9.504.5.092.682-.217.682-.483 0-.237-.008-.868-.013-1.703-2.782.605-3.369-1.343-3.369-1.343-.454-1.158-1.11-1.466-1.11-1.466-.908-.62.069-.608.069-.608 1.003.07 1.531 1.032 1.531 1.032.892 1.53 2.341 1.088 2.91.832.092-.647.35-1.088.636-1.338-2.22-.253-4.555-1.113-4.555-4.951 0-1.093.39-1.988 1.029-2.688-.103-.253-.446-1.272.098-2.65 0 0 .84-.27 2.75 1.026A9.564 9.564 0 0112 6.844c.85.004 1.705.115 2.504.337 1.909-1.296 2.747-1.027 2.747-1.027.546 1.379.202 2.398.1 2.651.64.7 1.028 1.595 1.028 2.688 0 3.848-2.339 4.695-4.566 4.943.359.309.678.92.678 1.855 0 1.338-.012 2.419-.012 2.747 0 .268.18.58.688.482A10.019 10.019 0 0022 12.017C22 6.484 17.522 2 12 2z"
-              />
-            </svg>
+            <GitHubMarkIcon className="w-4 h-4 fill-current" />
             <span>GitHub</span>
           </a>
         </div>
 
-        {/* Mobile Menu Button */}
-        <button
-          onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
-          className="md:hidden p-2 rounded-lg border border-gray-800 bg-gray-900/50 text-gray-400 hover:text-white"
-          aria-label="Toggle menu"
-        >
-          {isMobileMenuOpen ? (
-            <svg
-              className="w-6 h-6"
-              fill="none"
-              stroke="currentColor"
-              viewBox="0 0 24 24"
-            >
-              <path
-                strokeLinecap="round"
-                strokeLinejoin="round"
-                strokeWidth="2"
-                d="M6 18L18 6M6 6l12 12"
-              />
-            </svg>
-          ) : (
-            <svg
-              className="w-6 h-6"
-              fill="none"
-              stroke="currentColor"
-              viewBox="0 0 24 24"
-            >
-              <path
-                strokeLinecap="round"
-                strokeLinejoin="round"
-                strokeWidth="2"
-                d="M4 6h16M4 12h16m-7 6h7"
-              />
-            </svg>
-          )}
-        </button>
+        <div className="md:hidden flex items-center gap-2.5">
+          <ThemeToggle />
+          <button
+            onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
+            className="p-2 rounded-full border border-gray-800 bg-gray-900/50 text-gray-400 hover:text-white light:border-gray-300 light:bg-gray-100 light:text-gray-600 light:hover:text-gray-900"
+            aria-label="Toggle menu"
+          >
+            {isMobileMenuOpen ? (
+              <CloseIcon className="w-5 h-5" />
+            ) : (
+              <MenuIcon className="w-5 h-5" />
+            )}
+          </button>
+        </div>
       </div>
 
-      {/* Mobile Menu Panel */}
       <div
-        className={`md:hidden absolute top-full left-0 right-0 border-b border-gray-800 bg-gray-950/95 backdrop-blur-lg transition-all duration-300 overflow-hidden ${
-          isMobileMenuOpen ? "max-h-72 opacity-100 py-4" : "max-h-0 opacity-0 pointer-events-none"
+        className={`md:hidden absolute top-full inset-x-0 mt-3 rounded-3xl border border-gray-800 bg-gray-950/95 light:border-gray-200 light:bg-white/95 backdrop-blur-xl shadow-[0_16px_40px_-12px_rgba(0,0,0,0.5)] light:shadow-[0_16px_40px_-12px_rgba(15,23,42,0.2)] transition-all duration-300 origin-top overflow-hidden ${
+          isMobileMenuOpen
+            ? "max-h-80 opacity-100 scale-100 py-4"
+            : "max-h-0 opacity-0 scale-95 pointer-events-none py-0"
         }`}
       >
         <div className="flex flex-col px-6 gap-4">
@@ -130,7 +118,7 @@ export default function Navbar() {
               key={item.name}
               href={item.href}
               onClick={() => setIsMobileMenuOpen(false)}
-              className="text-base font-medium text-gray-400 hover:text-white py-2 transition-colors duration-200"
+              className="text-base font-medium text-gray-400 hover:text-white light:text-gray-600 light:hover:text-gray-900 py-2 transition-colors duration-200"
             >
               {item.name}
             </a>
@@ -139,19 +127,9 @@ export default function Navbar() {
             href="https://github.com/udhayakumarr"
             target="_blank"
             rel="noopener noreferrer"
-            className="flex items-center justify-center gap-2 w-full px-4 py-2.5 rounded-full text-sm font-medium border border-gray-850 bg-gray-900 hover:bg-gray-800 text-gray-300 hover:text-white transition-all duration-300 mt-2"
+            className="flex items-center justify-center gap-2 w-full px-4 py-2.5 rounded-full text-sm font-semibold bg-linear-to-r from-violet-600 to-blue-600 text-white shadow-md shadow-violet-500/25 transition-all duration-300 mt-2"
           >
-            <svg
-              className="w-4 h-4 fill-current"
-              viewBox="0 0 24 24"
-              aria-hidden="true"
-            >
-              <path
-                fillRule="evenodd"
-                clipRule="evenodd"
-                d="M12 2C6.477 2 2 6.484 2 12.017c0 4.425 2.865 8.18 6.839 9.504.5.092.682-.217.682-.483 0-.237-.008-.868-.013-1.703-2.782.605-3.369-1.343-3.369-1.343-.454-1.158-1.11-1.466-1.11-1.466-.908-.62.069-.608.069-.608 1.003.07 1.531 1.032 1.531 1.032.892 1.53 2.341 1.088 2.91.832.092-.647.35-1.088.636-1.338-2.22-.253-4.555-1.113-4.555-4.951 0-1.093.39-1.988 1.029-2.688-.103-.253-.446-1.272.098-2.65 0 0 .84-.27 2.75 1.026A9.564 9.564 0 0112 6.844c.85.004 1.705.115 2.504.337 1.909-1.296 2.747-1.027 2.747-1.027.546 1.379.202 2.398.1 2.651.64.7 1.028 1.595 1.028 2.688 0 3.848-2.339 4.695-4.566 4.943.359.309.678.92.678 1.855 0 1.338-.012 2.419-.012 2.747 0 .268.18.58.688.482A10.019 10.019 0 0022 12.017C22 6.484 17.522 2 12 2z"
-              />
-            </svg>
+            <GitHubMarkIcon className="w-4 h-4 fill-current" />
             <span>GitHub</span>
           </a>
         </div>
